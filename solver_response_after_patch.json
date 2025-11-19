@@ -1,0 +1,24 @@
+﻿{
+    "ok":  true,
+    "result":  {
+                   "computed_answer":  "anything you want",
+                   "decoded_blocks":  [
+                                          "{\"email\": \"your email\", \"secret\": \"your secret\", \"url\": \"https://tds-llm-analysis.s-anand.net/demo\", \"answer\": \"anything you want\"}"
+                                      ],
+                   "found_downloads":  [
+                                           "https://tds-llm-analysis.s-anand.net",
+                                           "https://tds-llm-analysis.s-anand.net/submit",
+                                           "https://tds-llm-analysis.s-anand.net/demo"
+                                       ],
+                   "status":  "submitted",
+                   "submit_response":  {
+                                           "correct":  true,
+                                           "delay":  null,
+                                           "reason":  "",
+                                           "url":  "https://tds-llm-analysis.s-anand.net/demo-scrape?email=23f3003822%40ds.study.iitm.ac.in\u0026id=4005"
+                                       },
+                   "submit_status":  200,
+                   "submit_url":  "https://tds-llm-analysis.s-anand.net/submit",
+                   "used_file":  "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\tmp9guw8nn0.download"
+               }
+}
