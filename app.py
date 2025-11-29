@@ -16,6 +16,21 @@ from playwright.sync_api import sync_playwright
 
 app = Flask(__name__)
 
+# --- START debug helpers (temporary) ---
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("llm-quiz-debug")
+
+@app.route("/", methods=["GET"])
+def index():
+    return "<h3>LLM Analysis Quiz API</h3><p>POST to <code>/api/quiz</code></p>", 200
+
+@app.route("/healthz", methods=["GET"])
+def healthz():
+    return "ok", 200
+# --- END debug helpers ---
+
+
 # Configuration
 SECRET = os.getenv("QUIZ_SECRET", "s3cr3t-llm-2025")
 USER_AGENT = "LLM-Quiz-Agent/1.0"
@@ -169,6 +184,20 @@ def post_answer(submit_url, payload):
 @app.route("/api/quiz", methods=["POST"])
 def quiz_handler():
     data = safe_json(request)
+        # Debug log incoming request (mask secret)
+    try:
+        email_dbg = data.get("email") if data else None
+        secret_dbg = data.get("secret") if data else None
+        url_dbg = data.get("url") if data else None
+        masked = None
+        if isinstance(secret_dbg, str) and len(secret_dbg) > 2:
+            masked = secret_dbg[0] + "*"*(len(secret_dbg)-2) + secret_dbg[-1]
+        else:
+            masked = "***"
+        logger.info(f"Incoming POST /api/quiz email={email_dbg} secret={masked} url={url_dbg}")
+    except Exception:
+        logger.exception("Failed to log incoming request")
+
     if data is None:
         return ("Invalid JSON", 400)
 
@@ -437,7 +466,9 @@ def quiz_handler():
 
     except Exception as e:
         tb = traceback.format_exc()
-        return jsonify({"ok": False, "error": str(e), "trace": tb}), 500
+        logger.error("Unhandled exception in /api/quiz: %s", tb)
+        # Return minimal info to caller but logs contain full trace
+        return jsonify({"ok": False, "error": "internal_error", "message": str(e)}), 500
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8080))
