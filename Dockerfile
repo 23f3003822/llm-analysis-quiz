@@ -12,4 +12,4 @@ COPY . /app
 
 ENV PORT 8080
 
-CMD ["gunicorn", "-w", "4", "-k", "gevent", "--bind", "0.0.0.0:$PORT", "app:app"]
+CMD ["sh", "-c", "gunicorn -w 4 -k gevent --bind 0.0.0.0:${PORT:-8080} app:app"]
